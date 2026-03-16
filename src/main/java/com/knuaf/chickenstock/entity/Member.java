@@ -22,28 +22,13 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private long id;
 
     @Column(nullable = false)
-    private String studentId;
+    private String loginId;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private String college1;
-
-    @Column
-    private String college2;
-
-    @Column(nullable = false)
-    String major1;
-
-    @Column
-    String major2;
-
-    @Column
-    String profile_image;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
@@ -58,7 +43,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return loginId;
     }
 
     @Override

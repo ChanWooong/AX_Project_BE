@@ -27,7 +27,7 @@ public class MemberService {
 
     public ResponseDto join(SignUpDto signUpDto) throws Exception {
         // 중복 학번 검사
-        if (memberRepository.findByStudentId(signUpDto.getStudentId()).isPresent()) {
+        if (memberRepository.findByLoginId(signUpDto.getId()).isPresent()) {
             throw new Exception("이미 가입된 학번 입니다.");
         }
 
@@ -36,17 +36,11 @@ public class MemberService {
             throw new Exception("비밀번호가 일치 하지 않습니다.");
         }
 
-        // Member 엔티티 생성 (비밀번호는 반드시 encode해서 저장!)
+        // Member 엔티티 생성 (비밀번호는 반드시 encode해서 저장)
         Member member = Member.builder()
-                .studentId(signUpDto.getStudentId())
+                .loginId(signUpDto.getId())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .name(signUpDto.getName())
-                .college1(signUpDto.getCollege1())
-                .college2(signUpDto.getCollege2())
-                .major1(signUpDto.getMajor1())
-                .major2(signUpDto.getMajor2())
-                .profile_image("NULL")
-                .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
         memberRepository.save(member);
@@ -60,24 +54,20 @@ public class MemberService {
 
     public ResponseDto login(SignInDto signInDto) {
         // 1. 유저 확인
-        Member member = memberRepository.findByStudentId(signInDto.getStudentId())
+        Member member = memberRepository.findByLoginId(signInDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 학번입니다."));
-
         // 2. 비밀번호 확인
         if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
         // 3. 토큰 생성 (TokenDto인지 TokenInfo인지 Provider와 이름을 꼭 맞추세요!)
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(member.getStudentId(), member.getRoles());
-
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(member.getLoginId(), member.getRoles());
         // 4. RefreshToken 업데이트 로직
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByStudentId(member.getStudentId());
-
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findByLoginId(member.getLoginId());
         if (refreshToken.isPresent()) {
             refreshTokenRepository.save(refreshToken.get().updateToken(tokenInfo.getRefreshToken()));
         } else {
-            RefreshToken newToken = new RefreshToken(tokenInfo.getRefreshToken(), member.getStudentId());
+            RefreshToken newToken = new RefreshToken(tokenInfo.getRefreshToken(), member.getLoginId());
             refreshTokenRepository.save(newToken);
         }
 

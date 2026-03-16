@@ -28,7 +28,7 @@ public class MemberController {
     public ResponseEntity<?> login(@RequestBody SignInDto signInDto) throws Exception {
         // 🚨 검문소: 데이터가 무사히 도착했는지 콘솔 창에 출력해서 확인합니다!
         System.out.println("========== 로그인 시도 ==========");
-        System.out.println("입력받은 학번: " + signInDto.getStudentId());
+        System.out.println("입력받은 아이디: " + signInDto.getId());
         System.out.println("입력받은 비밀번호: " + signInDto.getPassword());
         System.out.println("===============================");
 

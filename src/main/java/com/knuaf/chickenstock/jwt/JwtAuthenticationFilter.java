@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 if (jwtTokenProvider.refreshTokenValidation(refreshToken)) {
                     Optional<RefreshToken> savedToken = refreshTokenRepository.findByRefreshToken(refreshToken);
                     if (savedToken.isPresent()) {
-                        String loginId = savedToken.get().getStudentId();
+                        String loginId = savedToken.get().getLoginId();
                         TokenInfo tokenInfo = jwtTokenProvider.generateToken(loginId, Collections.singletonList("ROLE_USER"));
                         jwtTokenProvider.setHeaderAccessToken(httpResponse, tokenInfo.getAccessToken());
                         setAuthentication(tokenInfo.getAccessToken());
