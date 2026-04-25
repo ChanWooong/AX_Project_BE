@@ -20,7 +20,7 @@ public class RefreshToken {
     @NotBlank
     private String loginId;
 
-    public RefreshToken(String token, String studentId) {
+    public RefreshToken(String token, String loginId) {
         this.refreshToken = token;
         this.loginId = loginId;
     }
