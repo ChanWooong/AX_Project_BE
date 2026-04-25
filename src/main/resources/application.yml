@@ -15,3 +15,13 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+# src/main/resources/application.yml
+server:
+  port: 8080
+
+kis:
+  app-key: "발급받은_APP_KEY"
+  app-secret: "발급받은_APP_SECRET"
+  # 모의투자: https://openapivts.koreainvestment.com:29443
+  base-url: "https://openapi.koreainvestment.com:9443"
