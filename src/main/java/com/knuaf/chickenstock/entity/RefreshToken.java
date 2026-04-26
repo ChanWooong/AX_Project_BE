@@ -14,7 +14,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(length = 1000)
     private String refreshToken;
 
     @NotBlank
